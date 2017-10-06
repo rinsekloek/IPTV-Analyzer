@@ -467,12 +467,14 @@ EXPORT_SYMBOL_GPL(xtnu_request_find_match);
 int xtnu_ip_route_me_harder(struct sk_buff **pskb, unsigned int addr_type)
 {
 #if LINUX_VERSION_CODE <= KERNEL_VERSION(2, 6, 17)
-	/* Actually this one is valid up to 2.6.18.4, but changed in 2.6.18.5 */
-	return ip_route_me_harder(pskb);
+        /* Actually this one is valid up to 2.6.18.4, but changed in 2.6.18.5 */
+        return ip_route_me_harder(pskb);
 #elif LINUX_VERSION_CODE <= KERNEL_VERSION(2, 6, 23)
-	return ip_route_me_harder(pskb, addr_type);
+        return ip_route_me_harder(pskb, addr_type);
+#elif LINUX_VERSION_CODE >=  KERNEL_VERSION(4, 0, 0)
+        return ip_route_me_harder(NULL, *pskb, addr_type);
 #else
-	return ip_route_me_harder(*pskb, addr_type);
+        return ip_route_me_harder(*pskb, addr_type);
 #endif
 }
 EXPORT_SYMBOL_GPL(xtnu_ip_route_me_harder);
